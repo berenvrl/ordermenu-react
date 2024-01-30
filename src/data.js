@@ -1,7 +1,6 @@
 export const data = {
   pizzadata: {
     menuname: "Pizza",
-    logo: "/pizzas/pizzalogo.png",
     text: "Authentic Italian cusisine, 6 creative dishes to choose from. All from our stone oven, all organic, all delicious",
     menudetails: [
       {
@@ -12,6 +11,7 @@ export const data = {
         stock: 2,
         soldOut: false,
         id: 123,
+        orderCount: 0,
       },
       {
         name: "Pizza Margherita",
@@ -21,6 +21,7 @@ export const data = {
         photoName: "/pizzas/margherita.jpg",
         soldOut: false,
         id: 234,
+        orderCount: 0,
       },
       {
         name: "Pizza Spinaci",
@@ -30,6 +31,7 @@ export const data = {
         photoName: "/pizzas/spinaci.jpg",
         soldOut: false,
         id: 456,
+        orderCount: 0,
       },
       {
         name: "Pizza Funghi",
@@ -39,6 +41,7 @@ export const data = {
         soldOut: false,
         stock: 0,
         id: 678,
+        orderCount: 0,
       },
       {
         name: "Pizza Salamino",
@@ -48,6 +51,7 @@ export const data = {
         soldOut: true,
         stock: 5,
         id: 789,
+        orderCount: 0,
       },
       {
         name: "Pizza Prosciutto",
@@ -57,12 +61,12 @@ export const data = {
         soldOut: false,
         stock: 12,
         id: 890,
+        orderCount: 0,
       },
     ],
   },
   beerdata: {
     menuname: "Beer",
-    logo: "./pizzalogo.png",
     text: " Special beers that made in with different flavors and rich ingredients. Check out our best of beers!",
     menudetails: [
       {

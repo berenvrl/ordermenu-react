@@ -1,7 +1,8 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import commercial1 from "./commercial-1.jpg";
 import commercial2 from "./commercial-2.jpg";
 import commercial3 from "./commercial-3.jpg";
+import logo from "./pizzalogo.png";
 
 const DigitalMenu = ({ data, handleSelectOtherMenu, selectBeer }) => {
   const [isSelected, setIsSelected] = useState(null);
@@ -9,10 +10,15 @@ const DigitalMenu = ({ data, handleSelectOtherMenu, selectBeer }) => {
 
   const [buttonSelected, setButtonSelected] = useState(false);
 
+  const [clickedselect, setClickSelect] = useState(false);
+
   const sumorder = orderedItems.reduce((acc, cur) => acc + cur.price, 0);
 
   function handleSelection(item) {
-    setIsSelected((current) => (current?.id === item.id ? null : item));
+    setIsSelected((current) => (current?.id !== item.id ? item : current));
+    // setIsSelected((current) => (current?.id === item.id ? null : item));
+
+    setClickSelect(true);
 
     setOrderedItems((orderedItems) => [...orderedItems, item]);
   }
@@ -37,7 +43,11 @@ const DigitalMenu = ({ data, handleSelectOtherMenu, selectBeer }) => {
         >
           {selectBeer ? "See Pizzas" : "See Beers"}
         </Button>
-        <Menu data={data.menudetails} onhandleSelection={handleSelection} />
+        <Menu
+          data={data.menudetails}
+          onhandleSelection={handleSelection}
+          clickedselect={clickedselect}
+        />
         <Footer />
       </div>
       <div className="container-2">
@@ -48,8 +58,8 @@ const DigitalMenu = ({ data, handleSelectOtherMenu, selectBeer }) => {
             key={isSelected.id}
             onhandleDeleteItem={handleDeleteItem}
             buttonSelected={buttonSelected}
-            sumorder={sumorder}
             onhandleClickOrderButton={handleClickOrderButton}
+            sumorder={sumorder}
           />
         ) : (
           <CheckOut />
@@ -73,7 +83,7 @@ function Header({ data }) {
   return (
     <div className="header">
       <div className="header-head">
-        <img src={data.logo} alt="logo" />
+        <img src={logo} alt="logo" />
         <h1>Best Of Town Co.</h1>
       </div>
       <h2>Our {data.menuname} Menu</h2>
@@ -82,7 +92,7 @@ function Header({ data }) {
   );
 }
 
-function Menu({ data, isSelected, onhandleSelection }) {
+function Menu({ data, isSelected, onhandleSelection, clickedselect }) {
   return (
     <ul className="menu">
       {data.map((item) => (
@@ -91,20 +101,19 @@ function Menu({ data, isSelected, onhandleSelection }) {
           isSelected={isSelected}
           onhandleSelection={onhandleSelection}
           key={item.id}
+          clickedselect={clickedselect}
         />
       ))}
     </ul>
   );
 }
-function Item({ item, isSelected, onhandleSelection }) {
-  const selectedItem = isSelected?.id === item.id;
-
+function Item({ item, isSelected, onhandleSelection, clickedselect }) {
   return (
     <li
       className={
         item.soldOut
           ? " item item-sold-out"
-          : selectedItem
+          : isSelected
           ? "item selected"
           : "item"
       }
@@ -114,7 +123,12 @@ function Item({ item, isSelected, onhandleSelection }) {
         <h3>{item.name}</h3>
         <p>{item.ingredients}</p>
         <span>{item.soldOut ? "SOLD OUT" : `$${item.price}`}</span>
-        <Button onClick={() => onhandleSelection(item)}>Select</Button>
+        <Button
+          onClick={() => onhandleSelection(item)}
+          style={{ borderRadius: "50%", padding: "8px" }}
+        >
+          ➕
+        </Button>
       </div>
     </li>
   );
@@ -122,18 +136,36 @@ function Item({ item, isSelected, onhandleSelection }) {
 
 function Order({
   orderedItems,
-  isSelected,
   onhandleDeleteItem,
   buttonSelected,
-  sumorder,
   onhandleClickOrderButton,
+  sumorder,
 }) {
+  const countOrderedItems = (itemId) => {
+    let count = 0;
+    for (let i = 0; i < orderedItems.length; i++) {
+      if (orderedItems[i].id === itemId) {
+        count++;
+      }
+    }
+    return count;
+  };
+  const uniqueOrderedItems = Array.from(
+    new Set(orderedItems.map((item) => item.id))
+  ).map((itemId) => {
+    const orderedItem = orderedItems.find((item) => item.id === itemId);
+    return {
+      ...orderedItem,
+      count: countOrderedItems(itemId),
+    };
+  });
+
   return (
     <div className="order-bar">
       <p>🍴Your order from Best of Town Co.</p>
       <p>🍕Food/Drink</p>
       <ul>
-        {orderedItems.map((ordered) => (
+        {uniqueOrderedItems.map((ordered) => (
           <OrderedItem
             ordered={ordered}
             key={ordered.id}
@@ -142,7 +174,7 @@ function Order({
         ))}
       </ul>
       <Button onClick={() => onhandleClickOrderButton()}>
-        {buttonSelected ? "Thank You!" : "Complete Order"}
+        {buttonSelected && sumorder !== 0 ? "Thank You!" : "Complete Order"}
       </Button>
       {buttonSelected && <p>Total: ${sumorder}</p>}
     </div>
@@ -150,21 +182,39 @@ function Order({
 }
 
 function OrderedItem({ ordered, onhandleDeleteItem }) {
+  const [updatedcount, setUpdatedCount] = useState(ordered.count);
+  const [price, setPrice] = useState(ordered.price);
+
+  const handleIncrease = () => {
+    setUpdatedCount((count) => count + 1);
+  };
+
+  const handleDecrease = () => {
+    setUpdatedCount((count) => count - 1);
+  };
+  useEffect(() => {
+    setPrice(ordered.price * updatedcount);
+  }, [ordered.price, updatedcount]);
+
   return (
-    <li>
-      <img src={ordered.photoName} alt={ordered.name} />
-      <h3>{ordered.name}</h3>
-      <p>${ordered.price}</p>
-      <Button
-        style={{ background: "none" }}
-        onClick={() => onhandleDeleteItem(ordered.id)}
-      >
-        ❌
-      </Button>
-      {/* <button onClick={onhandleDeleteItem} className="button">
-        ❌
-      </button> */}
-    </li>
+    <>
+      <li>
+        <img src={ordered.photoName} alt={ordered.name} />
+        <h3>{ordered.name}</h3>
+        <p>${price}</p>
+        <div>
+          <button onClick={handleDecrease}>➖</button>
+          <span>{updatedcount}</span>
+          <button onClick={handleIncrease}>➕</button>
+        </div>
+        <Button
+          style={{ background: "none" }}
+          onClick={() => onhandleDeleteItem(ordered.id)}
+        >
+          ❌
+        </Button>
+      </li>
+    </>
   );
 }
 function CheckOut() {
@@ -200,7 +250,6 @@ function Commercial() {
 
 function Footer() {
   const hour = new Date().getHours();
-  //console.log(hour);
 
   const openHour = 12;
   const closeHour = 22;
