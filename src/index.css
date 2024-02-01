@@ -241,6 +241,7 @@ body {
   display: grid;
   grid-template-columns: 4.8rem 1fr auto;
   align-items: center;
+  justify-content: center;
   column-gap: 1.3rem;
   padding: 1.3rem;
   border-radius: 7px;
@@ -266,15 +267,26 @@ body {
   border: none;
   transform: translateY(2px);
 }
-.order-bar button {
-  float: right;
-  margin-right: 1.2rem;
+.btncontainer {
+  display: flex;
+  gap: 0.3rem;
+  justify-content: center;
+  align-items: center;
+  grid-row: 1;
+  grid-column: 3;
+  padding: 0.3rem;
+}
+.orderedcount {
+  font-weight: 600;
+}
+.orderCountbtn {
+  border-radius: 20%;
+  border: none;
+  padding: 0.3rem;
 }
 
-/*
-SPACING SYSTEM (px)
-2 / 4 / 8 / 12 / 16 / 24 / 32 / 40 / 48 / 64 / 80 / 96 / 128
-
-FONT SIZE SYSTEM (px)
-10 / 12 / 14 / 16 / 18 / 20 / 24 / 30 / 36 / 44 /52 / 62 / 74 / 86 / 98
-*/
+.deletebtn {
+  text-align: center;
+  background: none;
+  border: none;
+}
