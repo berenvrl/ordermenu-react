@@ -17,6 +17,6 @@ You can reach the project here, [menu](https://berenvrl.github.io/ordermenu-reac
 
 # Visual of the project
 
-![menu-visual](./visual1.png)
+![menu-visual](./menu-visual1.png)
 
-![menu-visual2](./visual2.png)
+![menu-visual2](./menu-visual2.png)
