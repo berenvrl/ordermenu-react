@@ -1,16 +1,16 @@
 {
   "files": {
-    "main.css": "/ordermenu-react/static/css/main.d26d76a1.css",
-    "main.js": "/ordermenu-react/static/js/main.b5a0ef36.js",
+    "main.css": "/ordermenu-react/static/css/main.fa361141.css",
+    "main.js": "/ordermenu-react/static/js/main.1d4fa242.js",
     "static/media/commercial-2.jpg": "/ordermenu-react/static/media/commercial-2.bc88ca0f1e924d461283.jpg",
     "static/media/commercial-1.jpg": "/ordermenu-react/static/media/commercial-1.03b8f15088a6278d52de.jpg",
     "static/media/commercial-3.jpg": "/ordermenu-react/static/media/commercial-3.a8a8100e2bf71ff2748a.jpg",
     "index.html": "/ordermenu-react/index.html",
-    "main.d26d76a1.css.map": "/ordermenu-react/static/css/main.d26d76a1.css.map",
-    "main.b5a0ef36.js.map": "/ordermenu-react/static/js/main.b5a0ef36.js.map"
+    "main.fa361141.css.map": "/ordermenu-react/static/css/main.fa361141.css.map",
+    "main.1d4fa242.js.map": "/ordermenu-react/static/js/main.1d4fa242.js.map"
   },
   "entrypoints": [
-    "static/css/main.d26d76a1.css",
-    "static/js/main.b5a0ef36.js"
+    "static/css/main.fa361141.css",
+    "static/js/main.1d4fa242.js"
   ]
 }
