@@ -47,7 +47,12 @@ function OrderedItem({
             ➕
           </button>
         </div>
-        <button className="deletebtn">❌</button>
+        <button
+          className="deletebtn"
+          onClick={() => onhandleDeleteItem(ordered.id)}
+        >
+          ❌
+        </button>
       </li>
     </>
   );
