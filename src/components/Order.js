@@ -2,16 +2,16 @@ import Button from "./Button";
 import OrderedItem from "./OrderedItem";
 
 function Order({
-  orderedItems,
-  setOrderedItems,
   onhandleDeleteItem,
   buttonSelected,
   onhandleClickOrderButton,
+  totalOrdersForCart,
+  setTotalOrderdForCart,
 }) {
   const countOrderedItems = (itemId) => {
     let count = 0;
-    for (let i = 0; i < orderedItems.length; i++) {
-      if (orderedItems[i].id === itemId) {
+    for (let i = 0; i < totalOrdersForCart.length; i++) {
+      if (totalOrdersForCart[i].id === itemId) {
         count++;
       }
     }
@@ -19,9 +19,9 @@ function Order({
   };
 
   const uniqueOrderedItems = Array.from(
-    new Set(orderedItems.map((item) => item.id))
+    new Set(totalOrdersForCart.map((item) => item.id))
   ).map((itemId) => {
-    const orderedItem = orderedItems.find((item) => item.id === itemId);
+    const orderedItem = totalOrdersForCart.find((item) => item.id === itemId);
 
     return {
       ...orderedItem,
@@ -29,7 +29,7 @@ function Order({
     };
   });
 
-  let totalPrice = orderedItems.reduce(
+  let totalPrice = totalOrdersForCart.reduce(
     (sum, item) => sum + item.price * item.orderCount,
     0
   );
@@ -44,15 +44,14 @@ function Order({
             ordered={ordered}
             key={ordered.id}
             onhandleDeleteItem={onhandleDeleteItem}
-            orderedItems={orderedItems}
-            setOrderedItems={setOrderedItems}
+            setTotalOrderdForCart={setTotalOrderdForCart}
           />
         ))}
       </ul>
       <Button onClick={() => onhandleClickOrderButton()}>
         {buttonSelected && totalPrice !== 0 ? "Thank You!" : "Complete Order"}
       </Button>
-      {buttonSelected && <p> {`Total: ${totalPrice}`}</p>}
+      {buttonSelected && <p> {`Total: $${totalPrice}`}</p>}
     </div>
   );
 }

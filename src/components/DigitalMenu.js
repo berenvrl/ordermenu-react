@@ -6,9 +6,15 @@ import Order from "./Order";
 import CheckOut from "./Checkout";
 import Footer from "./Footer";
 
-const DigitalMenu = ({ data, handleSelectOtherMenu, selectBeer }) => {
+const DigitalMenu = ({
+  data,
+  handleSelectOtherMenu,
+  selectBeer,
+  setTotalOrderdForCart,
+  totalOrdersForCart,
+}) => {
   const [isSelected, setIsSelected] = useState(null);
-  const [orderedItems, setOrderedItems] = useState([]);
+  //const [orderedItems, setOrderedItems] = useState([]);
   const [buttonSelected, setButtonSelected] = useState(false);
   const [clickedselect, setClickSelect] = useState(false);
 
@@ -17,7 +23,12 @@ const DigitalMenu = ({ data, handleSelectOtherMenu, selectBeer }) => {
 
     setClickSelect(true);
 
-    setOrderedItems((orderedItems) => [...orderedItems, item]);
+    //setOrderedItems((orderedItems) => [...orderedItems, item]);
+
+    setTotalOrderdForCart((totalOrdersForCart) => [
+      ...totalOrdersForCart,
+      item,
+    ]);
   }
 
   function handleClickOrderButton() {
@@ -25,8 +36,8 @@ const DigitalMenu = ({ data, handleSelectOtherMenu, selectBeer }) => {
   }
 
   function handleDeleteItem(id) {
-    setOrderedItems((orderedItems) =>
-      orderedItems.filter((item) => item.id !== id)
+    setTotalOrderdForCart((totalOrdersForCart) =>
+      totalOrdersForCart.filter((item) => item.id !== id)
     );
   }
 
@@ -50,13 +61,13 @@ const DigitalMenu = ({ data, handleSelectOtherMenu, selectBeer }) => {
       <div className="container-2">
         {isSelected ? (
           <Order
-            orderedItems={orderedItems}
-            setOrderedItems={setOrderedItems}
             isSelected={isSelected}
             key={isSelected.id}
             onhandleDeleteItem={handleDeleteItem}
             buttonSelected={buttonSelected}
             onhandleClickOrderButton={handleClickOrderButton}
+            totalOrdersForCart={totalOrdersForCart}
+            setTotalOrderdForCart={setTotalOrderdForCart}
           />
         ) : (
           <CheckOut />

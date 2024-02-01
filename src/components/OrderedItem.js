@@ -1,12 +1,6 @@
 import { useEffect, useState } from "react";
-import Button from "./Button";
 
-function OrderedItem({
-  ordered,
-  orderedItems,
-  setOrderedItems,
-  onhandleDeleteItem,
-}) {
+function OrderedItem({ ordered, onhandleDeleteItem, setTotalOrderdForCart }) {
   const [updatedCount, setUpdatedCount] = useState(1);
 
   const handleIncrease = () => {
@@ -14,7 +8,7 @@ function OrderedItem({
   };
 
   useEffect(() => {
-    setOrderedItems((prevOrderedItems) => {
+    setTotalOrderdForCart((prevOrderedItems) => {
       const updatedItems = prevOrderedItems.map((item) => {
         if (item.id === ordered.id) {
           return {
@@ -26,7 +20,7 @@ function OrderedItem({
       });
       return updatedItems;
     });
-  }, [updatedCount, setOrderedItems]);
+  }, [updatedCount, setTotalOrderdForCart]);
 
   const handleDecrease = () => {
     setUpdatedCount((count) => count - 1);

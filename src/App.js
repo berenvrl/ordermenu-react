@@ -4,6 +4,7 @@ import { data } from "./data";
 
 function App() {
   const [selectBeer, setSelectBeer] = useState(false);
+  const [totalOrdersForCart, setTotalOrderdForCart] = useState([]);
 
   function handleSelectOtherMenu() {
     setSelectBeer((select) => !select);
@@ -13,16 +14,20 @@ function App() {
     <>
       {!selectBeer && (
         <DigitalMenu
-          data={data.pizzadata}
+          data={!selectBeer ? data.pizzadata : data.beerdata}
           handleSelectOtherMenu={handleSelectOtherMenu}
           selectBeer={selectBeer}
+          setTotalOrderdForCart={setTotalOrderdForCart}
+          totalOrdersForCart={totalOrdersForCart}
         />
       )}
       {selectBeer && (
         <DigitalMenu
-          data={data.beerdata}
+          data={!selectBeer ? data.pizzadata : data.beerdata}
           handleSelectOtherMenu={handleSelectOtherMenu}
           selectBeer={selectBeer}
+          setTotalOrderdForCart={setTotalOrderdForCart}
+          totalOrdersForCart={totalOrdersForCart}
         />
       )}
     </>
