@@ -7,7 +7,7 @@ export const data = {
         name: "Focaccia",
         ingredients: "Bread with italian olive oil and rosemary",
         price: 6,
-        photoName: "/pizzas/focaccia.jpg",
+        photoName: "pizzas/focaccia.jpg",
         stock: 2,
         soldOut: false,
         id: 123,
