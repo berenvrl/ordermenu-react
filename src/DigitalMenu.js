@@ -12,7 +12,7 @@ const DigitalMenu = ({ data, handleSelectOtherMenu, selectBeer }) => {
 
   const [clickedselect, setClickSelect] = useState(false);
 
-  const sumorder = orderedItems.reduce((acc, cur) => acc + cur.price, 0);
+  // const sumorder = orderedItems.reduce((acc, cur) => acc + cur.price, 0);
 
   function handleSelection(item) {
     setIsSelected((current) => (current?.id !== item.id ? item : current));
@@ -54,12 +54,12 @@ const DigitalMenu = ({ data, handleSelectOtherMenu, selectBeer }) => {
         {isSelected ? (
           <Order
             orderedItems={orderedItems}
+            setOrderedItems={setOrderedItems}
             isSelected={isSelected}
             key={isSelected.id}
             onhandleDeleteItem={handleDeleteItem}
             buttonSelected={buttonSelected}
             onhandleClickOrderButton={handleClickOrderButton}
-            sumorder={sumorder}
           />
         ) : (
           <CheckOut />
@@ -136,10 +136,10 @@ function Item({ item, isSelected, onhandleSelection, clickedselect }) {
 
 function Order({
   orderedItems,
+  setOrderedItems,
   onhandleDeleteItem,
   buttonSelected,
   onhandleClickOrderButton,
-  sumorder,
 }) {
   const countOrderedItems = (itemId) => {
     let count = 0;
@@ -150,15 +150,22 @@ function Order({
     }
     return count;
   };
+
   const uniqueOrderedItems = Array.from(
     new Set(orderedItems.map((item) => item.id))
   ).map((itemId) => {
     const orderedItem = orderedItems.find((item) => item.id === itemId);
+
     return {
       ...orderedItem,
       count: countOrderedItems(itemId),
     };
   });
+
+  let totalPrice = orderedItems.reduce(
+    (sum, item) => sum + item.price * item.orderCount,
+    0
+  );
 
   return (
     <div className="order-bar">
@@ -170,42 +177,88 @@ function Order({
             ordered={ordered}
             key={ordered.id}
             onhandleDeleteItem={onhandleDeleteItem}
+            orderedItems={orderedItems}
+            setOrderedItems={setOrderedItems}
           />
         ))}
       </ul>
       <Button onClick={() => onhandleClickOrderButton()}>
-        {buttonSelected && sumorder !== 0 ? "Thank You!" : "Complete Order"}
+        {buttonSelected && totalPrice !== 0 ? "Thank You!" : "Complete Order"}
       </Button>
-      {buttonSelected && <p>Total: ${sumorder}</p>}
+      {buttonSelected && <p>Total: ${totalPrice}</p>}
     </div>
   );
 }
 
-function OrderedItem({ ordered, onhandleDeleteItem }) {
-  const [updatedcount, setUpdatedCount] = useState(ordered.count);
-  const [price, setPrice] = useState(ordered.price);
+function OrderedItem({
+  ordered,
+  orderedItems,
+  setOrderedItems,
+  onhandleDeleteItem,
+  handleUpdateWholeOrderItems,
+}) {
+  const [updatedCount, setUpdatedCount] = useState(1);
+  //const [updateCartOrder, setUpdateCartOrder] = useState(ordered);
 
   const handleIncrease = () => {
     setUpdatedCount((count) => count + 1);
   };
 
+  // useEffect(() => {
+  //   const updatedItem = {
+  //     ...ordered,
+  //     orderCount: updatedCount,
+  //     price: updatedCount * ordered.price,
+  //   };
+
+  //   setOrderedItems((prevOrderedItems) => {
+  //     const updatedItems = prevOrderedItems.map((item) => {
+  //       if (item.id === updatedItem.id) {
+  //         return updatedItem;
+  //       }
+  //       return item;
+  //     });
+  //     return updatedItems;
+  //   });
+  // }, [updatedCount, ordered, setOrderedItems]);
+
+  useEffect(() => {
+    setOrderedItems((prevOrderedItems) => {
+      const updatedItems = prevOrderedItems.map((item) => {
+        if (item.id === ordered.id) {
+          return {
+            ...item,
+            orderCount: updatedCount,
+          };
+        }
+        return item;
+      });
+      return updatedItems;
+    });
+  }, [updatedCount, setOrderedItems]);
+
+  // console.log(updateCartOrder.price);
+
   const handleDecrease = () => {
     setUpdatedCount((count) => count - 1);
   };
-  useEffect(() => {
-    setPrice(ordered.price * updatedcount);
-  }, [ordered.price, updatedcount]);
+
+  // useEffect(() => {
+  //   setPrice((item) => {
+  //     return { ...item, price: ordered.price * updatedcount };
+  //   });
+  // }, [ordered.price, updatedcount, price]);
 
   return (
     <>
       <li>
         <img src={ordered.photoName} alt={ordered.name} />
         <h3>{ordered.name}</h3>
-        <p>${price}</p>
+        <p>${ordered.price * updatedCount}</p>
         <div>
           <button onClick={handleDecrease}>➖</button>
-          <span>{updatedcount}</span>
-          <button onClick={handleIncrease}>➕</button>
+          <span>{ordered.orderCount}</span>
+          <button onClick={() => handleIncrease()}>➕</button>
         </div>
         <Button
           style={{ background: "none" }}
@@ -217,6 +270,7 @@ function OrderedItem({ ordered, onhandleDeleteItem }) {
     </>
   );
 }
+
 function CheckOut() {
   return (
     <div className="checkout">
